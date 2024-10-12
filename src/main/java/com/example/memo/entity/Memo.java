@@ -19,4 +19,10 @@ public class Memo {
         this.username = requestDto.getUsername();
         this.contents = requestDto.getContents(); // 이름과 컨텐츠 내용을 가져와서 두개의 필드에 데이터를 넣어준뒤 생성자를 만들어준다.
     }
+
+    public void update(MemoRequestDto requestDto) {
+        //메모 클래스 생성된다.
+        this.username = requestDto.getUsername();
+        this.contents = requestDto.getContents();
+    }
 }

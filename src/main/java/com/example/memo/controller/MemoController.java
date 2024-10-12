@@ -42,5 +42,32 @@ public class MemoController {
         return responseList;
     }
 
+    // api두게 이어서 put mapping을 한다.
+    @PutMapping("/memos/{id}")
+    public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
+        // json데이터를 넘겨준다. 메모가 db에존재하는지 확인해야 한다.
+        if (memoList.containsKey(id)) {
+            // true 반환값이 있다. 해당 메모를 가져옴
+            Memo memo = memoList.get(id);
+            // memo수정
+            memo.update(requestDto);
+            return memo.getId(); // id를 리턴한다.
+        } else {
+            throw new IllegalArgumentException("선택한 메모는 존재하지 않는다.");
+        }
+        // key부분에 해당하는 값이
+    }
 
+    // delete
+    @DeleteMapping("/memeos/{id}")
+    public Long deleteMemo(@PathVariable Long id) {
+        // 삭제기 때문에 id만 받는다.
+        if (memoList.containsKey(id)) {
+            memoList.remove(id);
+            return id;
+        } else {
+            throw new IllegalArgumentException("선택한 메모는 존재하지 않습니다.");
+        }
+    }
+    //
 }
