@@ -1,5 +1,6 @@
 package com.example.memo.repository;
 
+import com.example.memo.controller.MemoController;
 import com.example.memo.dto.MemoRequestDto;
 import com.example.memo.dto.MemoResponseDto;
 import com.example.memo.entity.Memo;
@@ -17,6 +18,9 @@ import java.util.List;
 public class MemoRepository {
 
     private final JdbcTemplate jdbcTemplate;
+
+
+
     public MemoRepository(JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate; // 템플릿을 넣어준다.
 

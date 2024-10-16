@@ -87,32 +87,25 @@ import java.util.List;
 @RequestMapping("/api")
 public class MemoController {
 
-    private final JdbcTemplate jdbcTemplate;
+    private final MemoService memoService;
 
     public MemoController(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate;
+        this.memoService = new MemoService(jdbcTemplate);
     }
 
     @PostMapping("/memos")
     public MemoResponseDto createMemo(@RequestBody MemoRequestDto requestDto) {
-
-        MemoService memoService = new MemoService(jdbcTemplate); //템플릿을 넣어 처리를 한다.
         return memoService.createMemo(requestDto);
-
         // 컨트롤러에서는 메모서비스만 반환한다.
     }
 
     @GetMapping("/memos")
     public List<MemoResponseDto> getMemos() {
-        MemoService memoService = new MemoService(jdbcTemplate);
         return memoService.getMemos();
-
-
     }
 
     @PutMapping("/memos/{id}")
     public Long updateMemo(@PathVariable Long id, @RequestBody MemoRequestDto requestDto) {
-        MemoService memoService = new MemoService(jdbcTemplate);
         return memoService.updateMemo(id, requestDto);
         // 해당 메모가 DB에 존재하는지 확인
 
@@ -120,13 +113,7 @@ public class MemoController {
 
     @DeleteMapping("/memos/{id}")
     public Long deleteMemo(@PathVariable Long id) {
-
-        MemoService memoService = new MemoService(jdbcTemplate);
         return memoService.deleteMemo(id);
-
         // 해당 메모가 DB에 존재하는지 확인
-
     }
-
-
 }
