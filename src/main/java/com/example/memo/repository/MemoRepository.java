@@ -1,6 +1,5 @@
 package com.example.memo.repository;
 
-import com.example.memo.controller.MemoController;
 import com.example.memo.dto.MemoRequestDto;
 import com.example.memo.dto.MemoResponseDto;
 import com.example.memo.entity.Memo;
