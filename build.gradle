@@ -26,14 +26,19 @@ repositories {
 dependencies {
     // MySQL
     implementation 'mysql:mysql-connector-java:8.0.28'
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-
     implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
     implementation 'org.springframework.boot:spring-boot-starter-web'
     compileOnly 'org.projectlombok:lombok'
     annotationProcessor 'org.projectlombok:lombok'
     testImplementation 'org.springframework.boot:spring-boot-starter-test'
     testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+
+    // JPA 설정
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    // 드라이버 의존성이 추가되어야 한다.
+    implementation 'mysql:mysql-connector-java:8.0.27'
+
+
 }
 
 tasks.named('test') {
