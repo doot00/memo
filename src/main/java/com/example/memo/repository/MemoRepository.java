@@ -4,6 +4,7 @@ import com.example.memo.dto.MemoRequestDto;
 import com.example.memo.dto.MemoResponseDto;
 import com.example.memo.entity.Memo;
 import jakarta.persistence.EntityManager;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
@@ -18,90 +19,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.List;
 
-@Repository
-public class MemoRepository {
 
-    private final JdbcTemplate jdbcTemplate;
+public interface MemoRepository extends JpaRepository<Memo, Long> {
+    // memo 클래스 id타입을 long타입으로 준다. 스프링데이터 jpa가 자동으로 만들어지는 구현체이고, bean으로 등록이 되어있기 떄문에
+    // 애너테이션이 필요 없다. 상속받아서 생성이 된다.
 
 
 
-    public MemoRepository(JdbcTemplate jdbcTemplate) {
-        this.jdbcTemplate = jdbcTemplate; // 템플릿을 넣어준다.
 
-    }
-
-    public Memo save(Memo memo) {
-        // DB저장
-        KeyHolder keyHolder = new GeneratedKeyHolder(); // 기본 키를 반환받기 위한 객체
-
-        String sql = "INSERT INTO memo (username, contents) VALUES (?, ?)";
-        jdbcTemplate.update( con -> {
-                    PreparedStatement preparedStatement = con.prepareStatement(sql,
-                            Statement.RETURN_GENERATED_KEYS);
-
-                    preparedStatement.setString(1, memo.getUsername());
-                    preparedStatement.setString(2, memo.getContents());
-                    return preparedStatement;
-                },
-                keyHolder);
-
-        // DB Insert 후 받아온 기본키 확인
-        Long id = keyHolder.getKey().longValue();
-        memo.setId(id);
-
-        return memo; //memo를 리턴해준다.
-    }
-
-    public List<MemoResponseDto> findAll() {
-        String sql = "SELECT * FROM memo";
-
-        return jdbcTemplate.query(sql, new RowMapper<MemoResponseDto>() {
-            @Override
-            public MemoResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
-                // SQL 의 결과로 받아온 Memo 데이터들을 MemoResponseDto 타입으로 변환해줄 메서드
-                Long id = rs.getLong("id");
-                String username = rs.getString("username");
-                String contents = rs.getString("contents"); // 해당하는 컬럼의 값을 가져온다.
-                return new MemoResponseDto(id, username, contents);
-            }
-        });
-
-    }
-
-    public void update(Long id, MemoRequestDto requestDto) {
-        String sql = "UPDATE memo SET username = ?, contents = ? WHERE id = ?"; // 값을 가져온다.
-        jdbcTemplate.update(sql, requestDto.getUsername(), requestDto.getContents(), id);
-
-    }
-
-    public void delete(Long id) {
-        String sql = "DELETE FROM memo WHERE id = ?";
-        jdbcTemplate.update(sql, id);
-
-    }
-
-    public Memo findById(Long id) {
-        // DB 조회
-        String sql = "SELECT * FROM memo WHERE id = ?";
-
-        return jdbcTemplate.query(sql, resultSet -> {
-            if(resultSet.next()) {
-                Memo memo = new Memo();
-                memo.setUsername(resultSet.getString("username"));
-                memo.setContents(resultSet.getString("contents"));
-                return memo;
-            } else {
-                return null;
-            }
-        }, id);
-    }
-    @Transactional
-    public Memo createMemo(EntityManager em) {
-        Memo memo = em.find(Memo.class, 1);
-        memo.setUsername("Robbert"); // 데이터를 변경해준다.
-        memo.setContents("@Transactional 전파 테스트 중!"); // 업데이트 쿼리가 생성된다.
-
-        System.out.println("createMemo 메서드 종료");
-        return memo;
-    }
 }
